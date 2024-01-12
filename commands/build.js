@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import path from 'path'
+import fs from 'fs'
 import { spawn } from 'child_process'
 
 export default function build({ client, message }) {
@@ -13,6 +14,9 @@ export default function build({ client, message }) {
             cwd: `./clients/${client}/application/v1/mag-react`
         }).on('exit', (code, signal) => {
             if (code === 0 && !signal) {
+                fs.copyFile('./setup/staticwebapp.config.json', `./clients/${client}/application/v1/mag-react/build/staticwebapp.config.json`, err => {
+                    if (err) throw err;
+                })
                 spawn('git add . ', {
                     stdio: 'inherit',
                     shell: true
